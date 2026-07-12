@@ -216,18 +216,6 @@
         }
         .hero-inner { position: relative; }
 
-        .eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            color: var(--accent);
-            letter-spacing: 0.02em;
-            margin: 0 0 18px;
-        }
-        .eyebrow .t { color: var(--text-muted); }
-
         h1.title {
             font-family: var(--font-display);
             font-weight: 800;
@@ -294,7 +282,6 @@
 
         /* ---------- Section 通用 ---------- */
         section.block { padding: 40px 0; border-top: 1px solid var(--border); }
-        section.block > .wrap > .eyebrow { margin-bottom: 14px; }
 
         h2.h2 {
             font-family: var(--font-display);
@@ -530,8 +517,6 @@
     <main>
         <section class="hero" id="top">
             <div class="wrap hero-inner">
-                <p class="eyebrow"><span class="t">[00:00.00]</span> GET · JSON / 302 音乐数据接口</p>
-
                 <h1 class="title">
                     <span class="eq eq--lg" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
                     Meting API
@@ -562,7 +547,6 @@
 
         <section class="block" id="parameters">
             <div class="wrap">
-                <p class="eyebrow"><span class="t">[00:42.10]</span> 请求参数</p>
                 <h2 class="h2">📋 参数说明</h2>
                 <p class="section-desc">所有接口均为 GET 请求，通过以下查询参数组合来获取对应的音乐数据。</p>
 
@@ -626,7 +610,6 @@
 
         <section class="block" id="quickstart">
             <div class="wrap">
-                <p class="eyebrow"><span class="t">[01:18.35]</span> 快速开始</p>
                 <h2 class="h2">🚀 使用示例</h2>
                 <p class="section-desc">点击复制或直接在新标签页打开，即可查看真实请求结果。</p>
 

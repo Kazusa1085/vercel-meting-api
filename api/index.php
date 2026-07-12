@@ -137,7 +137,19 @@ if ($type == 'playlist') {
 
 function api_uri() // static
 {
-    return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . strtok($_SERVER['REQUEST_URI'], '?');
+    // Vercel（以及几乎所有反向代理/CDN）会在边缘节点终止 HTTPS，
+    // 再用普通 HTTP 把请求转发给函数本身，所以 $_SERVER['HTTPS'] 在
+    // Vercel 上并不会被设置为 'on'，必须改用 X-Forwarded-Proto 头，
+    // 这是 Vercel 官方文档确认会转发的头，用来还原客户端真实协议。
+    if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
+        $proto = strtolower(trim(explode(',', $_SERVER['HTTP_X_FORWARDED_PROTO'])[0]));
+        $https = $proto === 'https';
+    } else {
+        // 兼容没有反向代理的部署环境（例如本地直接用 HTTPS 跑内置服务器）
+        $https = isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off';
+    }
+
+    return ($https ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . strtok($_SERVER['REQUEST_URI'], '?');
 }
 
 function auth($name)
