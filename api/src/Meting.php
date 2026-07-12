@@ -25,6 +25,7 @@ class Meting
     public $proxy = null;
     public $format = false;
     public $header;
+    public $temp = array();
 
     public function __construct($value = 'netease')
     {
@@ -122,7 +123,6 @@ class Meting
                 break;
             }
         }
-        curl_close($curl);
 
         return $this;
     }
@@ -143,6 +143,9 @@ class Meting
     private function clean($raw, $rule)
     {
         $raw = json_decode($raw, true);
+        if (!is_array($raw)) {
+            $raw = array();
+        }
         if (!empty($rule)) {
             $raw = $this->pickup($raw, $rule);
         }
@@ -923,15 +926,7 @@ class Meting
 
     private function getRandomHex($length)
     {
-        if (function_exists('random_bytes')) {
-            return bin2hex(random_bytes($length / 2));
-        }
-        if (function_exists('mcrypt_create_iv')) {
-            return bin2hex(mcrypt_create_iv($length / 2, MCRYPT_DEV_URANDOM));
-        }
-        if (function_exists('openssl_random_pseudo_bytes')) {
-            return bin2hex(openssl_random_pseudo_bytes($length / 2));
-        }
+        return bin2hex(random_bytes((int) ($length / 2)));
     }
 
     private function bchexdec($hex)
@@ -984,18 +979,11 @@ class Meting
 
         $body = json_encode($api['body']);
 
-        if (function_exists('openssl_encrypt')) {
-            $body = openssl_encrypt($body, 'aes-128-cbc', $nonce, false, $vi);
-            $body = openssl_encrypt($body, 'aes-128-cbc', $skey, false, $vi);
-        } else {
-            $pad = 16 - (strlen($body) % 16);
-            $body = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $nonce, $body.str_repeat(chr($pad), $pad), MCRYPT_MODE_CBC, $vi));
-            $pad = 16 - (strlen($body) % 16);
-            $body = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $skey, $body.str_repeat(chr($pad), $pad), MCRYPT_MODE_CBC, $vi));
-        }
+        $body = openssl_encrypt($body, 'aes-128-cbc', $nonce, false, $vi);
+        $body = openssl_encrypt($body, 'aes-128-cbc', $skey, false, $vi);
 
         if (extension_loaded('bcmath')) {
-            $skey = strrev(utf8_encode($skey));
+            $skey = strrev(mb_convert_encoding($skey, 'UTF-8', 'ISO-8859-1'));
             $skey = $this->bchexdec($this->str2hex($skey));
             $skey = bcpowmod($skey, $pubkey, $modulus);
             $skey = $this->bcdechex($skey);
@@ -1020,12 +1008,7 @@ class Meting
 
         $data = 'songid='.$api['body']['songid'].'&ts='.intval(microtime(true) * 1000);
 
-        if (function_exists('openssl_encrypt')) {
-            $data = openssl_encrypt($data, 'aes-128-cbc', $key, false, $vi);
-        } else {
-            $pad = 16 - (strlen($data) % 16);
-            $data = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $key, $data.str_repeat(chr($pad), $pad), MCRYPT_MODE_CBC, $vi));
-        }
+        $data = openssl_encrypt($data, 'aes-128-cbc', $key, false, $vi);
 
         $api['body']['e'] = $data;
 
@@ -1327,7 +1310,7 @@ class Meting
     {
         $result = json_decode($result, true);
 
-        if (count($result['data']['data']['lyrics'])) {
+        if (count($result['data']['data']['lyrics'] ?? array())) {
             $data = $result['data']['data']['lyrics'][0]['content'];
             $data = preg_replace('/<[^>]+>/', '', $data);
             preg_match_all('/\[([\d:\.]+)\](.*)\s\[x-trans\](.*)/i', $data, $match);
@@ -1394,6 +1377,9 @@ class Meting
 	private function kuwo_lyric($result)
     {
         $result = json_decode($result, true);
+        if (!isset($result['data']['lrclist']) || !is_array($result['data']['lrclist'])) {
+            $result['data']['lrclist'] = array();
+        }
         if (count($result['data']['lrclist'])) {
 			$kuwolrc = '';
 			for ($i = 0; $i < count($result['data']['lrclist']); $i++) {

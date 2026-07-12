@@ -81,7 +81,7 @@ APlayer-Demo:
 
 ## Requirement
 
-PHP 5.4+ and BCMath, Curl, OpenSSL extension installed.
+PHP 8.5+ and BCMath, Curl, OpenSSL extension installed. Deployed on Vercel via [vercel-php](https://github.com/vercel-community/php) `0.9.0`.
 
 ## License
 
