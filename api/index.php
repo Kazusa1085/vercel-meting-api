@@ -13,7 +13,13 @@ define('AUTH', false);
 define('AUTH_SECRET', 'meting-secret');
 
 if (!isset($_GET['type']) || !isset($_GET['id'])) {
-    include __DIR__ . '/public/index.php';
+    $request_path = rtrim(strtok($_SERVER['REQUEST_URI'], '?'), '/');
+    if ($request_path === '') {
+        include __DIR__ . '/public/index.php';
+    } else {
+        http_response_code(404);
+        include __DIR__ . '/public/404.php';
+    }
     exit;
 }
 
@@ -149,7 +155,9 @@ function api_uri() // static
         $https = isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off';
     }
 
-    return ($https ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . strtok($_SERVER['REQUEST_URI'], '?');
+    // 统一固定为根路径：所有请求都会被 vercel.json 路由到这个入口文件，
+    // 用实际请求路径拼 BaseURL 没有意义，还会在访问非法路径时把那个路径带出来。
+    return ($https ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/';
 }
 
 function auth($name)
