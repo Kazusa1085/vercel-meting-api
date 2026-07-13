@@ -145,7 +145,7 @@
             padding: 48px 0;
         }
 
-        .content { text-align: center; max-width: 460px; }
+        .content { text-align: center; max-width: 460px; margin: 0 auto; }
 
         .code {
             font-family: var(--font-display);
@@ -197,19 +197,6 @@
         }
         .btn-primary:hover { background: var(--accent-strong); text-decoration: none; }
 
-        .btn-ghost {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 10px 20px;
-            border-radius: 999px;
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-            font-size: 0.92rem;
-            font-weight: 500;
-        }
-        .btn-ghost:hover { color: var(--accent); border-color: var(--accent); text-decoration: none; }
-
         .path-hint {
             margin-top: 28px;
             font-size: 0.8rem;
@@ -238,13 +225,9 @@
             <div class="content">
                 <p class="code">404</p>
                 <h1 class="title">这个页面不存在，像放错了曲目</h1>
-                <p class="desc">
-                    如果你是想查看接口文档，请返回首页；
-                    如果是在调用接口，请检查 <code>type</code>、<code>id</code> 等参数是否正确。
-                </p>
+                <p class="desc">这个页面不存在。</p>
                 <div class="actions">
-                    <a class="btn-primary" href="/">返回首页</a>
-                    <a class="btn-ghost" href="/?type=song&id=591321">查看示例请求</a>
+                    <a class="btn-primary" href="/">返回文档</a>
                 </div>
                 <p class="path-hint"><?= htmlspecialchars(strtok($_SERVER['REQUEST_URI'], '?'), ENT_QUOTES, 'UTF-8') ?></p>
             </div>
