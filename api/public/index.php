@@ -523,8 +523,7 @@
                 </h1>
 
                 <p class="lead">
-                    基于 <strong>Meting</strong> 构建的音乐数据 API，由
-                    <a href="https://www.raana.icu" target="_blank" rel="noopener">Kazusa1085</a> 提供服务，
+                    基于 <strong>Meting</strong> 构建的音乐数据 API，
                     部署于 <a href="https://vercel.com" target="_blank" rel="noopener">Vercel</a>。
                 </p>
 
