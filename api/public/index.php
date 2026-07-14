@@ -561,7 +561,7 @@
                             <tr>
                                 <td>
                                     <span class="param-name">server</span>
-                                    <span class="req req--no">可选 · 默认 netease</span>
+                                    <span class="req req--no">可选</span>
                                 </td>
                                 <td>
                                     数据源
